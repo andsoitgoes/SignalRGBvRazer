@@ -20,3 +20,10 @@ Schedule it at logon
 • Add arguments:
 -NoProfile -ExecutionPolicy Bypass -File "C:\Path\To\LaunchChromaHidden.ps1"
 - OK and exit.
+
+
+*One major change* 
+
+Thanks to LLMs being imperfect, it is clear you still need to have MinimizeToTray installed which, not the end of the world! Chances are there's somethintg you need to hide anyway, and thankfully it's a very low impact app
+
+Download it from MajorGeeks - https://www.majorgeeks.com/files/details/minimizetotray.html
