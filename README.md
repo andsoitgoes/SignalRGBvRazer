@@ -2,24 +2,23 @@
 
 Eliminates the conflict between Razer Synapse/Chroma SDK and SignalRGB by running the Razer Chroma Sample App as a hidden background service at logon.
 
-## Problem
+Problem
 
 After a Windows reinstall, the Chroma SDK fails to initialize properly because Task Scheduler references an old user SID that no longer exists. The Sample App crashes in a restart loop instead of initializing cleanly.
 
-## Solution
+Solution
 
 This solution uses a native Windows Task Scheduler approach to properly execute the Sample App with the current user's credentials on every logon.
 
-## Setup
+Setup
 
-### Step 1: Compile the Sample App
+Step 1 - Compile the Sample App
 
-Download and compile the Razer Chroma Sample Application from:
-https://github.com/RazerOfficial/CChromaEditor?tab=readme-ov-file#sample-project
+Download and compile the Razer Chroma Sample Application from https://github.com/RazerOfficial/CChromaEditor
 
 Note the full path to your compiled RazerChromaSampleApplication.exe
 
-### Step 2: Create the Launch Script
+Step 2 - Create the Launch Script
 
 Save the following as LaunchAndHideChroma.ps1 in your PowerShell Scripts directory:
 
@@ -64,23 +63,33 @@ $newStyle = ($oldStyle -band (-bnot [Win32.WindowHelper]::WS_EX_APPWINDOW)) -bor
 
 Write-Output "Chroma Sample App is now hidden and running."
 
-EDIT: Change $chromaApp to your compiled app path
+EDIT: Change the path variables at the top to match your system
 
-### Step 3: Create the Task Scheduler Task
+Step 3 - Create the Task Scheduler Task
 
-Open PowerShell as Administrator and run:
+Open PowerShell as Administrator and run this command:
 
-schtasks /create /tn "HiddenChroma" /tr "powershell.exe -NoProfile -ExecutionPolicy Bypass -File 'C:\Path\To\LaunchAndHideChroma.ps1'" /sc ONLOGON /rl HIGHEST
+schtasks /create /tn "HiddenChroma" /tr "powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\Path\To\LaunchAndHideChroma.ps1" /sc ONLOGON /rl HIGHEST
 
 Replace C:\Path\To\LaunchAndHideChroma.ps1 with your actual script path.
 
-### Step 4: Test
+Step 4 - Test
 
 Log out and back in. The Sample App should launch silently at logon.
 
-## Why This Works
+Why This Works
 
-- Native schtasks command handles user SID mapping automatically
-- No registry hacks - survives Windows reinstalls
-- Simple to update - just edit the PowerShell script paths
-- Hidden at startup - runs in
+Native schtasks command handles user SID mapping automatically
+No registry hacks - survives Windows reinstalls
+Simple to update - just edit the PowerShell script paths
+Hidden at startup - runs in background
+
+Troubleshooting
+
+Task doesn't run - Verify the script path is correct and accessible
+Chroma not initializing - Ensure Razer Synapse is installed and running
+Script execution blocked - Run Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+Note
+
+You may still need MinimizeToTray installed for additional window management, but core functionality works without it.
